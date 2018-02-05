@@ -11,10 +11,11 @@ auto sum_parallel_reduce(const T& container) -> typename std::enable_if_t<
     typename T::value_type> {
   using result_type = typename T::value_type;
   result_type sum = tbb::parallel_reduce(
-      tbb::blocked_range<size_t>{0, container.size()}, static_cast<result_type>(0),
+      tbb::blocked_range<typename T::const_iterator>{container.cbegin(), container.cend()},
+      static_cast<result_type>(0),
       [&](const auto& range, result_type value) -> result_type {
-        for (auto i = range.begin(); i != range.end(); i++) {
-          value += container[i];
+        for (auto i = range.begin(); i != range.end(); ++i) {
+          value += *i;
         }
         return value;
       },
