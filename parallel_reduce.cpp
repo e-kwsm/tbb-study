@@ -1,32 +1,36 @@
 #include <iostream>
+#include <limits>
 #include <type_traits>
 #include <vector>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_reduce.h>
 
-template<typename T>
-auto sum_parallel_reduce(const T& container) -> typename std::enable_if_t<
-    std::is_same<typename std::iterator_traits<typename T::iterator>::iterator_category,
-                 std::random_access_iterator_tag>::value,
-    typename T::value_type> {
-  using result_type = typename T::value_type;
-  result_type sum = tbb::parallel_reduce(
-      tbb::blocked_range<typename T::const_iterator>{container.cbegin(), container.cend()},
-      static_cast<result_type>(0),
-      [&](const auto& range, result_type value) -> result_type {
+template<typename BinaryOperation, typename C, typename T>
+auto parallel_reduce(const C& container, BinaryOperation op, const T& identity) ->
+    typename std::enable_if_t<
+        std::is_same<typename std::iterator_traits<typename C::iterator>::iterator_category,
+                     std::random_access_iterator_tag>::value,
+        T> {
+  return tbb::parallel_reduce(
+      tbb::blocked_range<typename C::const_iterator>{container.cbegin(), container.cend()},
+      identity,
+      [&](const auto& range, T value) -> T {
         for (auto i = range.begin(); i != range.end(); ++i) {
-          value += *i;
+          value = op(value, *i);
         }
         return value;
       },
-      std::plus<result_type>{});
-  return sum;
+      op);
 }
 
 int main() {
   constexpr size_t n = 500'000'000ull;
   std::vector<int> v(n, 1);
-  std::cout << sum_parallel_reduce(v) << std::endl;
+  std::cout << "sum\t" << parallel_reduce(v, std::plus<int>{}, 0) << std::endl;
+  std::cout << "min\t"
+            << parallel_reduce(v, [](int a, int b) { return std::min(a, b); },
+                               std::numeric_limits<int>::max())
+            << std::endl;
 
   return 0;
 }
