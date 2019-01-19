@@ -4,16 +4,14 @@
 #include <tbb/task_scheduler_init.h>
 
 unsigned fibonacci(unsigned n) {
-  if (n <= 1) {
+  if (n <= 1)
     return n;
-  } else {
-    tbb::task_group g;
-    unsigned x, y;
-    g.run([&] { x = fibonacci(n - 2); });
-    g.run([&] { y = fibonacci(n - 1); });
-    g.wait();
-    return x + y;
-  }
+  tbb::task_group g;
+  unsigned x, y;
+  g.run([&] { x = fibonacci(n - 2); });
+  g.run([&] { y = fibonacci(n - 1); });
+  g.wait();
+  return x + y;
 }
 
 int main(int argc, char** argv) {

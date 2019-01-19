@@ -5,7 +5,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_reduce.h>
 
-template<typename BinaryOperation, typename C, typename T>
+template <typename BinaryOperation, typename C, typename T>
 auto parallel_reduce(const C& container, BinaryOperation op, const T& identity) ->
     typename std::enable_if_t<
         std::is_same<typename std::iterator_traits<typename C::iterator>::iterator_category,

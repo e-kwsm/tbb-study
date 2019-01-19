@@ -15,10 +15,3 @@ all: $(TARGET)
 .PHONY: clean
 clean:
 	rm -f $(TARGET)
-
-tags: *.h $(SRCS)
-	ctags $^
-
-.PHONY: distclean
-distclean: clean
-	rm -f tags

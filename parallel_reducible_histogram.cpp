@@ -1,6 +1,6 @@
+#include <array>
 #include <cmath>
 #include <iostream>
-#include <array>
 #include <tbb/blocked_range.h>
 #include "parallel_reducible_histogram.h"
 
@@ -16,4 +16,6 @@ int main() {
          return (k / bin) * bin;
        }))
     std::cout << k << '\t' << v << '\n';
+
+  return 0;
 }
