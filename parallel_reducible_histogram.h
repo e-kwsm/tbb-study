@@ -3,14 +3,15 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_reduce.h>
 
-template <typename Key, typename Value, typename C, typename F>
+/*! operate f for each element of container and merge into one histogram */
+template<typename Key, typename Value, typename C, typename F>
 class ParallelReducibleHistogram {
  public:
   ParallelReducibleHistogram(const C& container, F f) : container{container}, f{f} {}
   ParallelReducibleHistogram(const ParallelReducibleHistogram& other, tbb::split)
       : container(other.container), f{other.f} {}
 
-  template <typename R>
+  template<typename R>
   void operator()(const R& r) {
     auto tmp = histogram;
     for (auto i = r.begin(); i != r.end(); ++i)
@@ -31,7 +32,7 @@ class ParallelReducibleHistogram {
   std::map<Key, Value> histogram;
 };
 
-template <typename Key, typename Value, typename C, typename F>
+template<typename Key, typename Value, typename C, typename F>
 auto parallel_reduce_histogram(const C& container, F f) -> typename std::enable_if_t<
     std::is_same<typename std::iterator_traits<typename C::iterator>::iterator_category,
                  std::random_access_iterator_tag>::value,
@@ -42,7 +43,7 @@ auto parallel_reduce_histogram(const C& container, F f) -> typename std::enable_
   return hist.get();
 }
 
-template <typename Key, typename Value, typename C>
+template<typename Key, typename Value, typename C>
 auto parallel_reduce_histogram(const C& container) {
   return parallel_reduce_histogram<Key, Value>(container, [](auto x) { return x; });
 }
