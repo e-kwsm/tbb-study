@@ -1,7 +1,5 @@
-#include <cstdio>
 #include <iostream>
 #include <tbb/task_group.h>
-#include <tbb/task_scheduler_init.h>
 
 unsigned fibonacci(unsigned n) {
   if (n <= 1u)
@@ -14,9 +12,7 @@ unsigned fibonacci(unsigned n) {
   return x + y;
 }
 
-int main(int argc, char** argv) {
-  tbb::task_scheduler_init init{argc == 2 ? std::atoi(argv[1])
-                                          : tbb::task_scheduler_init::default_num_threads()};
+int main() {
   std::cout << fibonacci(35) << '\n';  // 9227465
 
   return 0;
