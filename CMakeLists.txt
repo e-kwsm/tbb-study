@@ -11,6 +11,7 @@ find_package(Boost REQUIRED)
 
 foreach(src IN ITEMS
   parallel_for.cpp
+  parallel_pipeline.cpp
   parallel_reduce.cpp
   parallel_reducible_histogram.cpp
   parallel_scan.cpp
