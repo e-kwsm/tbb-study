@@ -3,7 +3,7 @@
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_reduce.h>
 
-/*! operate f for each element of container and merge into one histogram */
+//! operate f for each element of container and merge into one histogram
 template<typename Key, typename Value, typename C, typename F>
 class ParallelReducibleHistogram {
  public:

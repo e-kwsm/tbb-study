@@ -1,4 +1,3 @@
-#include <array>
 #include <iostream>
 #include <vector>
 #include <tbb/blocked_range.h>

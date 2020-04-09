@@ -1,5 +1,4 @@
 #include <array>
-#include <cmath>
 #include <iostream>
 #include <tbb/blocked_range.h>
 #include "parallel_reducible_histogram.h"
